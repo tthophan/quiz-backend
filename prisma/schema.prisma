@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Quiz {
+  id               Int        @id @default(autoincrement()) @map("id")
+  code             String     @unique @map("code") @db.VarChar(16)
+  title            String     @map("title") @db.VarChar(255)
+  shortDescription String     @map("short_description") @db.MediumText
+  // Audit filed
+  isDeleted        Boolean    @default(false) @map("is_deleted") @db.TinyInt
+  createdAt        DateTime   @default(now()) @map("created_at") @db.DateTime(3)
+  createdBy        String     @default("0") @map("created_by") @db.VarChar(16)
+  updatedAt        DateTime   @updatedAt @map("updated_at") @db.DateTime(3)
+  updatedBy        String     @default("0") @map("updated_by") @db.VarChar(16)
+  // Relation
+  questions        Question[]
+  Result           Result[]
+
+  @@map("quiz")
+}
+
+model Question {
+  id        Int      @id @default(autoincrement()) @map("id")
+  code      String   @unique @map("code") @db.VarChar(16)
+  text      String   @map("text") @db.MediumText
+  hint      String?  @map("hint") @db.MediumText
+  quizId    Int      @map("quiz_id")
+  // Audit filed
+  isDeleted Boolean  @default(false) @map("is_deleted") @db.TinyInt
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  createdBy String   @default("0") @map("created_by") @db.VarChar(16)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+  updatedBy String   @default("0") @map("updated_by") @db.VarChar(16)
+  // Relation
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  options   Option[]
+  results   Result[]
+
+  @@map("question")
+}
+
+model Option {
+  id         Int      @id @default(autoincrement()) @map("id")
+  code       String   @unique @map("code") @db.VarChar(16)
+  text       String   @map("text") @db.MediumText
+  questionId Int      @map("question_id")
+  match      Boolean  @default(false) @map("match") @db.TinyInt
+  // Audit filed
+  isDeleted  Boolean  @default(false) @map("is_deleted") @db.TinyInt
+  createdAt  DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  createdBy  String   @default("0") @map("created_by") @db.VarChar(16)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+  updatedBy  String   @default("0") @map("updated_by") @db.VarChar(16)
+  // Relation
+  question   Question @relation(fields: [questionId], references: [id])
+  results    Result[]
+
+  @@map("option")
+}
+
+model Result {
+  id         Int      @id @default(autoincrement()) @map("id")
+  quizId     Int      @map("quiz_id")
+  questionId Int      @map("question_id")
+  optionId   Int      @map("option_id")
+  userId     String   @map("user_id")
+  // Audit filed
+  isDeleted  Boolean  @default(false) @map("is_deleted") @db.TinyInt
+  createdAt  DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  createdBy  String   @default("0") @map("created_by") @db.VarChar(16)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+  updatedBy  String   @default("0") @map("updated_by") @db.VarChar(16)
+  // Relation
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id])
+  option     Option   @relation(fields: [optionId], references: [id])
+
+  @@index([quizId, questionId, optionId, userId])
+  @@map("question_result")
+}
