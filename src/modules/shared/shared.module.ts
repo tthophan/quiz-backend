@@ -1,10 +1,44 @@
-import { Global, Module } from "@nestjs/common";
-import { OptionQueries, QuestionQueries, QuizQueries, ResultQueries } from "./queries.";
-import { OptionRepository, QuestionRepository, QuizRepository, ResultRepository } from "./repositories";
+import { Global, Module } from '@nestjs/common';
+import {
+  OptionQueries,
+  QuestionQueries,
+  QuizQueries,
+  ResultQueries,
+  UserQueries,
+} from './queries.';
+import {
+  OptionRepository,
+  QuestionRepository,
+  QuizRepository,
+  ResultRepository,
+  UserRepository,
+} from './repositories';
 
 @Global()
 @Module({
-    exports: [QuizQueries, QuizRepository, QuestionQueries, QuestionRepository, OptionQueries, OptionRepository, ResultQueries, ResultRepository,],
-    providers: [QuizQueries, QuizRepository, QuestionQueries, QuestionRepository, OptionQueries, OptionRepository, ResultQueries, ResultRepository,],
+  exports: [
+    QuizQueries,
+    QuizRepository,
+    QuestionQueries,
+    QuestionRepository,
+    OptionQueries,
+    OptionRepository,
+    ResultQueries,
+    ResultRepository,
+    UserQueries,
+    UserRepository,
+  ],
+  providers: [
+    QuizQueries,
+    QuizRepository,
+    QuestionQueries,
+    QuestionRepository,
+    OptionQueries,
+    OptionRepository,
+    ResultQueries,
+    ResultRepository,
+    UserQueries,
+    UserRepository,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

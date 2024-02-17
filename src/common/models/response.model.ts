@@ -1,38 +1,38 @@
-import { ExceptionMessages, ExceptionType } from '../constants'
+import { ExceptionMessages, ExceptionType } from '../constants';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface CoreRes<T = any> {
-  code: string
-  data: T
+  code: string;
+  data: T;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errorMessages?: Array<any>
-  message: string
+  errorMessages?: Array<any>;
+  message: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class SuccessResponse<T = any>
   implements Omit<CoreRes<T>, 'errorMessages' | 'message'>
 {
-  code: string
-  success: boolean
-  data: T
+  code: string;
+  success: boolean;
+  data: T;
   constructor(data: T) {
-    this.code = 'SUCCESS'
-    this.data = data
+    this.code = 'SUCCESS';
+    this.data = data;
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class ErrorResponse<T = any> implements Omit<CoreRes<T>, 'data'> {
-  message: string
+  message: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errorMessages?: Array<any>
-  code: string
+  errorMessages?: Array<any>;
+  code: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(exceptionCode: ExceptionType, errorMessages?: Array<any>) {
-    this.code = exceptionCode
-    this.errorMessages = errorMessages
-    this.message = ExceptionMessages[exceptionCode]?.message ?? exceptionCode
+    this.code = exceptionCode;
+    this.errorMessages = errorMessages;
+    this.message = ExceptionMessages[exceptionCode]?.message ?? exceptionCode;
   }
 }
 
@@ -40,12 +40,12 @@ export class ErrorResponse<T = any> implements Omit<CoreRes<T>, 'data'> {
 export class WarningResponse<T = any>
   implements Omit<CoreRes<T>, 'errorMessages'>
 {
-  message: string
-  code: string
-  data: T
+  message: string;
+  code: string;
+  data: T;
   constructor(data: T, exceptionCode: ExceptionType) {
-    this.code = exceptionCode
-    this.data = data
-    this.message = ExceptionMessages[exceptionCode]?.message ?? exceptionCode
+    this.code = exceptionCode;
+    this.data = data;
+    this.message = ExceptionMessages[exceptionCode]?.message ?? exceptionCode;
   }
 }

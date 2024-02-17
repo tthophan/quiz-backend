@@ -1,1 +1,1 @@
-export const LOCAL_AUTHORIZE_KEY = Symbol('LOCAL_AUTHORIZE_KEY')
+export const LOCAL_AUTHORIZE_KEY = Symbol('LOCAL_AUTHORIZE_KEY');

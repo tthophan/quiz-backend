@@ -1,23 +1,29 @@
-import { Type } from "class-transformer"
-import { ArrayMinSize, ArrayUnique, IsArray, IsNumber, ValidateNested } from "class-validator"
+import { Type } from 'class-transformer';
+import {
+  ArrayMinSize,
+  ArrayUnique,
+  IsArray,
+  IsNumber,
+  ValidateNested,
+} from 'class-validator';
 
 export class OptionResult {
-    @IsNumber()
-    questionId: number
+  @IsNumber()
+  questionId: number;
 
-    @IsArray()
-    @ArrayUnique()
-    optionIds: Array<number>
+  @IsArray()
+  @ArrayUnique()
+  optionIds: Array<number>;
 }
 
 export class QuizAnswer {
-    @IsNumber()
-    id: number
+  @IsNumber()
+  id: number;
 
-    @IsArray()
-    @ArrayMinSize(1)
-    @Type(() => OptionResult)
-    @ValidateNested()
-    @ArrayUnique<OptionResult>(i => i.optionIds)
-    optionResults: Array<OptionResult>
+  @IsArray()
+  @ArrayMinSize(1)
+  @Type(() => OptionResult)
+  @ValidateNested()
+  @ArrayUnique<OptionResult>((i) => i.optionIds)
+  optionResults: Array<OptionResult>;
 }

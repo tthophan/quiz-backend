@@ -4,4 +4,4 @@ export type Expose<T> = Omit<
     'emailSafe'
   >,
   'subnet'
->
+>;

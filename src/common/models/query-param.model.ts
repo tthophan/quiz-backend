@@ -1,15 +1,15 @@
-import { Transform } from 'class-transformer'
-import { IsNumber, IsOptional } from 'class-validator'
+import { Transform } from 'class-transformer';
+import { IsNumber, IsOptional } from 'class-validator';
 
 export class QueryParams {
   @IsNumber()
   @Transform(({ value }) => Number(value))
-  page: number
+  page: number;
 
   @IsNumber()
   @Transform(({ value }) => Number(value))
-  pageSize: number
+  pageSize: number;
 
   @IsOptional()
-  orderBy?: { [key: string]: 'asc' | 'desc' }
+  orderBy?: { [key: string]: 'asc' | 'desc' };
 }

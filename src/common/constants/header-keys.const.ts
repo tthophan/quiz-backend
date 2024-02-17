@@ -6,4 +6,4 @@ export const HeaderKeys = {
   RequestId: 'x-request-id',
   HashKey: 'hash',
   DeviceId: 'deviceId',
-}
+};

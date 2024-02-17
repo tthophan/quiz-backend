@@ -20,7 +20,7 @@ import { SharedModule } from './modules/shared';
     PrismaModule,
     SharedModule,
     AuthModule,
-    QuizzesModule
+    QuizzesModule,
   ],
   controllers: [],
   providers: [
@@ -39,7 +39,7 @@ import { SharedModule } from './modules/shared';
     },
     {
       provide: APP_GUARD,
-      useClass: AuthorizeGuard
+      useClass: AuthorizeGuard,
     },
     {
       provide: APP_FILTER,
@@ -48,11 +48,11 @@ import { SharedModule } from './modules/shared';
     {
       provide: APP_INTERCEPTOR,
       useClass: CoreResponseInterceptor,
-    }
+    },
   ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ScopeVariableMiddleware).forRoutes('*')
+    consumer.apply(ScopeVariableMiddleware).forRoutes('*');
   }
 }

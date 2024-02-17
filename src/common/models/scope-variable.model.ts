@@ -1,38 +1,38 @@
 export class Session {
-  userId: string
-  email: string
-  fullName: string
+  userId: string;
+  email: string;
+  fullName: string;
 
   constructor(data: Partial<Session>) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 }
 
 export class ScopeVariable {
-  accessToken?: string
+  accessToken?: string;
 
-  refreshToken?: string
+  refreshToken?: string;
 
-  appName?: string
+  appName?: string;
 
-  appBuildNumber?: number | string
+  appBuildNumber?: number | string;
 
-  requestId?: string
+  requestId?: string;
 
   // session
-  session?: Session
+  session?: Session;
 
-  hash?: string
+  hash?: string;
 
-  deviceId?: string
+  deviceId?: string;
 
-  platform?: string
+  platform?: string;
 
   platformVersion?: string;
 
-  [key: string]: unknown
+  [key: string]: unknown;
 
   constructor(data?: Partial<ScopeVariable>) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 }

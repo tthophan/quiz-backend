@@ -1,4 +1,4 @@
-import { BinaryLike, createHmac } from 'crypto'
+import { BinaryLike, createCipheriv, createHmac, randomBytes } from 'crypto';
 import {
   concatMap,
   defer,
@@ -8,28 +8,28 @@ import {
   of,
   retryWhen,
   throwError,
-} from 'rxjs'
+} from 'rxjs';
 
 export const CommonHelpers = {
   sha256(data: BinaryLike, secret: string): string {
-    return createHmac('sha256', secret).update(data).digest('hex')
+    return createHmac('sha256', secret).update(data).digest('hex');
   },
   uuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
       const r = (Math.random() * 16) | 0,
-        v = c == 'x' ? r : (r & 0x3) | 0x8
-      return v.toString(16)
-    })
+        v = c == 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
   },
-  convertPhoneNumber(phoneNumber: string, region: 'VN' = 'VN'): string {
-    if (!phoneNumber) return ''
-    const regex = /^\+84(\d{9,10})$/ // Regex pattern for +84 followed by 9 or 10 digits
-    const match = phoneNumber.match(regex)
+  convertPhoneNumber(phoneNumber: string): string {
+    if (!phoneNumber) return '';
+    const regex = /^\+84(\d{9,10})$/; // Regex pattern for +84 followed by 9 or 10 digits
+    const match = phoneNumber.match(regex);
     if (match) {
-      const localNumber = '0' + match[1] // Extract digits after +84 and prepend '0'
-      return localNumber
+      const localNumber = '0' + match[1]; // Extract digits after +84 and prepend '0'
+      return localNumber;
     } else {
-      return phoneNumber // Return the original number if it doesn't match the pattern
+      return phoneNumber; // Return the original number if it doesn't match the pattern
     }
   },
   /**
@@ -48,25 +48,39 @@ export const CommonHelpers = {
   ): Promise<T> {
     return lastValueFrom<T>(
       defer(() => from(action)).pipe(
-        retryWhen(errors => {
+        retryWhen((errors) => {
           return errors.pipe(
             concatMap((error, count) => {
-              console.log(`Retrying ${count + 1}`)
+              console.log(`Retrying ${count + 1}`);
               if (count < maxRetries - 1) {
                 const delayTimes = isExponentialRetry
                   ? delayBetweenRetries * Math.pow(2, count)
-                  : delayBetweenRetries // Exponential delay
-                return of(1).pipe(delay(delayTimes))
+                  : delayBetweenRetries; // Exponential delay
+                return of(1).pipe(delay(delayTimes));
               }
-              return throwError(() => error)
+              return throwError(() => error);
             }),
-          )
+          );
         }),
       ),
-    ).catch(error => {
-      console.log(`callWithRetry Exception: ${JSON.stringify(error)}`)
-      errorCallback && errorCallback(error)
-      throw error
-    })
+    ).catch((error) => {
+      console.log(`callWithRetry Exception: ${JSON.stringify(error)}`);
+      errorCallback && errorCallback(error);
+      throw error;
+    });
   },
-}
+
+  aes256(data: string, secret: string) {
+    // Use AES256 for hashing
+    const algorithm = 'aes-256-cbc';
+    const key = Buffer.from(secret);
+    const iv = randomBytes(16);
+
+    const cipher = createCipheriv(algorithm, key, iv);
+
+    let encrypted = cipher.update(data, 'utf-8', 'hex');
+    encrypted += cipher.final('hex');
+
+    return encrypted;
+  },
+};

@@ -1,4 +1,4 @@
-export type ExceptionType = keyof typeof ExceptionMessages
+export type ExceptionType = keyof typeof ExceptionMessages;
 
 export const ExceptionMessages = {
   SUCCESS: {
@@ -27,6 +27,12 @@ export const ExceptionMessages = {
     message: 'Invalid request. One or several input parameters are invalid.',
   },
   QUIZ_NOT_FOUND: {
-    message: 'Can not find Quiz'
-  }
-}
+    message: 'Can not find Quiz',
+  },
+  AUTH_PHONE_NUMBER_EXISTS: {
+    message: 'Phone number already exists',
+  },
+  AUTH_WRONG_PASSWORD: {
+    message: 'Username or password incorrect',
+  },
+};
