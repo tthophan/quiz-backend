@@ -10,7 +10,8 @@ export class QuestionResponse {
   hint: string;
   @Expose()
   text: string;
-
+  @Expose()
+  maxOptionCanSelected: Number;
   @Type(() => OptionResponse)
   @Expose()
   options: Array<OptionResponse>;

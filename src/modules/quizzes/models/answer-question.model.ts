@@ -1,4 +1,5 @@
-import { IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ArrayMinSize, IsArray, IsNumber } from 'class-validator';
 
 export class AnswerQuestion {
   @IsNumber()
@@ -7,6 +8,8 @@ export class AnswerQuestion {
   @IsNumber()
   questionId: number;
 
-  @IsNumber()
-  optionId: number;
+  @IsArray()
+  @ArrayMinSize(1)
+  @Type(() => Number)
+  optionIds: Array<number>;
 }

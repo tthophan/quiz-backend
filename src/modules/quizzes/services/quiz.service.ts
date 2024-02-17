@@ -145,7 +145,7 @@ export class QuizService extends BaseService {
   async answerQuestion(
     payload: AnswerQuestion,
   ): Promise<AnswerQuestionResponse> {
-    const { quizId, questionId, optionId } = payload;
+    const { quizId, questionId, optionIds } = payload;
     const question = await this.questionQueries.findUnique({
       where: {
         id: questionId,
@@ -159,21 +159,21 @@ export class QuizService extends BaseService {
         questionId: question.id,
       },
     });
-    const optionSelected = options.find((o) => o.id === optionId);
-    if (!optionSelected) throw new BusinessException('INVALID_DATA');
+    const selectedOptions = options.filter((o) => optionIds.includes(o.id));
+    if (selectedOptions.length !== optionIds.length) throw new BusinessException('INVALID_DATA');
 
-    await this.resultRepository.create({
-      data: {
+    await this.resultRepository.createMany({
+      data: selectedOptions.map((option) => ({
         userId: this.currentSession.userId,
-        questionId: optionSelected.questionId,
-        optionId: optionSelected.id,
+        questionId: option.questionId,
+        optionId: option.id,
         quizId: quizId,
-      },
+      })),
     });
 
     return plainToInstance(AnswerQuestionResponse, {
-      result: optionSelected.match,
-      detail: options.find((o) => o.match),
+      result: selectedOptions.filter((x) => x.match).length === question.maxOptionCanSelected,
+      details: options.filter((o) => o.match),
     });
   }
 }

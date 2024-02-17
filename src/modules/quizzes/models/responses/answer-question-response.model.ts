@@ -7,5 +7,5 @@ export class AnswerQuestionResponse {
 
   @Type(() => OptionResponse)
   @Expose()
-  detail: OptionResponse;
+  details: Array<OptionResponse>;
 }
