@@ -90,17 +90,18 @@ model Result {
 }
 
 model User {
-  id             Int      @id @default(autoincrement()) @map("id")
-  phone          String   @unique @map("phone")
-  fullName       String   @map("full_name")
-  password       String   @map("password")
-  passwordSecure String   @map("password_secure")
+  id               Int       @id @default(autoincrement()) @map("id")
+  phone            String    @unique @map("phone")
+  fullName         String    @map("full_name")
+  password         String    @map("password")
+  passwordSecure   String    @map("password_secure")
+  latestSignedTime DateTime? @map("latest_signed_time")
   // Audit filed
-  isDeleted      Boolean  @default(false) @map("is_deleted") @db.TinyInt
-  createdAt      DateTime @default(now()) @map("created_at") @db.DateTime(3)
-  createdBy      String   @default("0") @map("created_by") @db.VarChar(16)
-  updatedAt      DateTime @updatedAt @map("updated_at") @db.DateTime(3)
-  updatedBy      String   @default("0") @map("updated_by") @db.VarChar(16)
+  isDeleted        Boolean   @default(false) @map("is_deleted") @db.TinyInt
+  createdAt        DateTime  @default(now()) @map("created_at") @db.DateTime(3)
+  createdBy        String    @default("0") @map("created_by") @db.VarChar(16)
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.DateTime(3)
+  updatedBy        String    @default("0") @map("updated_by") @db.VarChar(16)
 
   @@index([phone])
   @@map("user")

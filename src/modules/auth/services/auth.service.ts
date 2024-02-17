@@ -51,31 +51,42 @@ export class AuthService extends BaseService {
       this.authConfig.aes256Secret,
       this.authConfig.aes256CipherIV,
     );
-    const checkUser = await this.userQueries.findUnique({
+    const user = await this.userQueries.findUnique({
       where: {
         phone: phoneHash,
       },
     });
-    if (!checkUser) throw new BusinessException('AUTH_WRONG_PASSWORD');
+    if (!user) throw new BusinessException('AUTH_WRONG_PASSWORD');
     const passwordHash = CommonHelpers.sha256(
       payload.password,
-      checkUser.passwordSecure,
+      user.passwordSecure,
     );
 
-    if (passwordHash !== checkUser.password)
+    if (passwordHash !== user.password)
       throw new BusinessException('AUTH_WRONG_PASSWORD');
 
-    return {
-      jwt: await this.jwtService.generateToken({
-        userId: checkUser.id.toString(),
+    const [jwt] = await Promise.all([
+      await this.jwtService.generateToken({
+        userId: user.id.toString(),
         email: 'quiz@gmail.com',
       }),
+      await this.userRepository.update({
+        data: {
+          latestSignedTime: new Date(),
+        },
+        where: {
+          id: user.id,
+        },
+      }),
+    ]);
+    return {
+      jwt,
       userInfo: {
-        id: checkUser.id.toString(),
-        name: checkUser.fullName,
+        id: user.id.toString(),
+        name: user.fullName,
         email: 'quiz@gmail.com',
-        image: ''
-      }
-    }
+        image: '',
+      },
+    };
   }
 }

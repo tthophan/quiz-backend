@@ -15,9 +15,9 @@ export class AuthorizeGuard implements CanActivate {
     private ref: Reflector,
     private readonly googleOAuthService: GoogleOAuthService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
   async canActivate(context: ExecutionContext) {
-    const localAuthData: { isOptional: boolean } = this.ref.get(
+    const localAuthData = this.ref.get(
       LOCAL_AUTHORIZE_KEY,
       context.getHandler(),
     );
@@ -30,14 +30,14 @@ export class AuthorizeGuard implements CanActivate {
 
     const ctxId = ContextIdFactory.getByRequest(request);
     const token = await this.googleOAuthService.verifyToken(accessToken);
-    const jwtVerify = await this.jwtService.verifyToken<JwtSession>(accessToken)
+    const jwtVerify =
+      await this.jwtService.verifyToken<JwtSession>(accessToken);
 
     request.scopeVariable.session = new Session({
       email: token.email ?? jwtVerify?.data?.userId,
-      userId: token.sub ?? jwtVerify?.data?.email
+      userId: token.sub ?? jwtVerify?.data?.email,
     });
     return appStorage.run({ ctxId, request }, () => {
-      if (localAuthData.isOptional) return true;
       return token.valid || jwtVerify.valid;
     });
   }

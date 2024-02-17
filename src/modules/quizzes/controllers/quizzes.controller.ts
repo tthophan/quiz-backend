@@ -10,7 +10,7 @@ export class QuizzesController extends BaseController {
     super();
   }
 
-  @Authorize(true)
+  @Authorize()
   @Get()
   async pagination(@Query() query: QuizzesQueryParams) {
     return await this.quizService.pagination(query.page, query.pageSize);

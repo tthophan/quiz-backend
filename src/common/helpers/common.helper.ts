@@ -72,7 +72,7 @@ export const CommonHelpers = {
 
   aes256(data: string, secret: string, customIV: string) {
     // Use AES256 for hashing
-    const algorithm = 'aes-256-cbc' as const
+    const algorithm = 'aes-256-cbc' as const;
     const key = Buffer.from(secret, 'utf-8');
     const iv = Buffer.alloc(16);
     Buffer.from(customIV, 'utf-8').copy(iv);
