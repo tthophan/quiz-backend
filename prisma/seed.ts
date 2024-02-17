@@ -146,6 +146,47 @@ async function seed() {
         },
     });
 
+
+    const developQuestion = await prisma.question.create({
+        data: {
+            code: 'DEV-1-Q1',
+            text: 'Which programming languages are commonly used for web development?',
+            hint: 'The movie "Titanic" was released on December 19, 1997, in the United States. Directed by James Cameron, the film became a massive critical and commercial success, earning numerous awards, including 11 Academy Awards.',
+            quizId: generalKnowledgeQuiz.id,
+            maxOptionCanSelected: 2,
+            createdBy: 'admin',
+        },
+    });
+    await prisma.option.createMany({
+        data: [
+            {
+                code: 'DEV-1-Q1-O1',
+                text: 'Java',
+                questionId: developQuestion.id,
+                createdBy: 'admin',
+                match: true, // Correct answer
+            },
+            {
+                code: 'DEV-1-Q1-O2',
+                text: 'English',
+                questionId: developQuestion.id,
+                createdBy: 'admin',
+            },
+            {
+                code: 'DEV-1-Q1-O3',
+                text: 'Vietnamese',
+                questionId: developQuestion.id,
+                createdBy: 'admin',
+            },
+            {
+                code: 'DEV-1-Q1-O4',
+                text: 'Python',
+                questionId: developQuestion.id,
+                createdBy: 'admin',
+                match: true, // Correct answer
+            },
+        ],
+    });
     // Create Question for the General Knowledge Quiz
     const generalKnowledgeQuestion = await prisma.question.create({
         data: {
@@ -276,8 +317,6 @@ async function seed() {
             createdBy: 'admin',
         },
     });
-
-    // Create Options for the Movie Question
     await prisma.option.createMany({
         data: [
             {
