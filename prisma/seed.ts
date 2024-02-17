@@ -59,6 +59,7 @@ async function seed() {
         data: {
             code: 'Q1-2',
             text: 'What is the capital of Spain?',
+            hint: 'Think about a European country known for its rich history, culture, and flamenco dancing. The capital city is a major cultural and economic center, hosting world-renowned museums and landmarks.',
             quizId: quiz1.id,
             createdBy: 'admin',
         },
@@ -98,6 +99,7 @@ async function seed() {
         data: {
             code: 'Q1-3',
             text: 'What is the capital of India?',
+            hint: 'Consider a city with a prominent historical significance, known for its diverse culture, iconic landmarks such as the Red Fort and India Gate, and as the seat of the country\'s government.',
             quizId: quiz1.id,
             createdBy: 'admin',
         },
@@ -149,6 +151,7 @@ async function seed() {
         data: {
             code: 'GK-1-Q1',
             text: 'Who wrote the book "Chitty-Chitty-Bang-Bang: The Magical Car"?',
+            hint: 'The book "Chitty-Chitty-Bang-Bang: The Magical Car" was written by Ian Fleming, best known for creating the character James Bond. The book was published posthumously in 1964, after Fleming\'s death in 1964.',
             quizId: generalKnowledgeQuiz.id,
             createdBy: 'admin',
         },
@@ -188,6 +191,7 @@ async function seed() {
         data: {
             code: 'GK-2-Q1',
             text: 'In which part of your body would you find the cruciate ligament?',
+            hint: 'The cruciate ligaments are found in the knee joint. There are two cruciate ligaments in the knee: the anterior cruciate ligament (ACL) and the posterior cruciate ligament (PCL). These ligaments play a crucial role in stabilizing the knee joint and controlling its movements.',
             quizId: generalKnowledgeQuiz.id,
             createdBy: 'admin',
         },
@@ -227,6 +231,7 @@ async function seed() {
         data: {
             code: 'LIT-1-Q1',
             text: 'What is the name of the main antagonist in the Shakespeare play Othello?',
+            hint: 'In the Shakespeare play "Othello," the main antagonist is Iago. Iago is a cunning and manipulative character who orchestrates a series of deceptions and schemes to manipulate Othello, the play\'s protagonist, and others, leading to tragic consequences.',
             quizId: generalKnowledgeQuiz.id,
             createdBy: 'admin',
         },
@@ -266,6 +271,7 @@ async function seed() {
         data: {
             code: 'MOV-1-Q1',
             text: 'When was the movie Titanic released?',
+            hint: 'The movie "Titanic" was released on December 19, 1997, in the United States. Directed by James Cameron, the film became a massive critical and commercial success, earning numerous awards, including 11 Academy Awards.',
             quizId: generalKnowledgeQuiz.id,
             createdBy: 'admin',
         },
@@ -318,6 +324,7 @@ async function seed() {
         data: {
             code: 'GEO-1-Q1',
             text: 'What is the currency of Denmark?',
+            hint: 'The currency of Denmark is the Danish Krone, abbreviated as DKK.',
             quizId: geographyQuiz.id,
             createdBy: 'admin',
         },
@@ -357,6 +364,7 @@ async function seed() {
         data: {
             code: 'GEO-2-Q1',
             text: 'What is the currency of South Korea?',
+            hint: 'The currency of South Korea is the South Korean Won, abbreviated as KRW.',
             quizId: geographyQuiz.id,
             createdBy: 'admin',
         },
@@ -396,6 +404,7 @@ async function seed() {
         data: {
             code: 'GEO-3-Q1',
             text: 'What is the currency of Vietnam?',
+            hint: 'The currency of Vietnam is the Vietnamese Dong, abbreviated as VND.',
             quizId: geographyQuiz.id,
             createdBy: 'admin',
         },
@@ -436,6 +445,7 @@ async function seed() {
         data: {
             code: 'GEO-4-Q1',
             text: 'What is the currency of the United States?',
+            hint: 'The currency of the United States is the United States Dollar, abbreviated as USD.',
             quizId: geographyQuiz.id,
             createdBy: 'admin',
         },
@@ -472,7 +482,7 @@ async function seed() {
 
 
 
-    
+
 
 
     console.log('Seed completed successfully.');
