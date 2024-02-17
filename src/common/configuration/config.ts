@@ -17,6 +17,7 @@ const configuration: IConfiguration = {
   },
   auth: {
     aes256Secret: process.env.AUTH_AES256_SECRET,
+    aes256CipherIV: '123456',
     jwtExpiresIn: parseNumber(process.env.JWT_EXPIRE_IN, 3600),
     jwtIssuer: process.env.JWT_ISSUER,
     jwtSecret: process.env.JWT_SECRET,

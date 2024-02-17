@@ -14,7 +14,7 @@ export class GoogleOAuthService {
 
   verifyToken = async (
     accessToken: string,
-  ): Promise<Partial<GoogleToken> & { verified: boolean }> => {
+  ): Promise<Partial<GoogleToken> & { valid: boolean }> => {
     try {
       const response = await axios.get<GoogleToken>(
         this.googleConfig.verifyUrl + `?access_token=${accessToken}`,
@@ -22,12 +22,11 @@ export class GoogleOAuthService {
       const { data: token } = response;
       return {
         ...token,
-        verified: token.azp === this.googleConfig.clientId,
+        valid: token.azp === this.googleConfig.clientId,
       };
     } catch (ex) {
-      console.log(ex);
       return {
-        verified: false,
+        valid: false,
       };
     }
   };

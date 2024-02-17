@@ -8,6 +8,7 @@ export interface IConfiguration {
   };
   auth: {
     aes256Secret: string;
+    aes256CipherIV: string;
     jwtSecret: string;
     jwtIssuer: string;
     jwtExpiresIn: number;
