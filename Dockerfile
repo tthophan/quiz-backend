@@ -24,9 +24,10 @@ FROM base as deps
 # into this layer.
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=bind,source=prisma,target=prisma \
     --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
-
+    npm ci --omit=dev \
+    npm run generate
 ################################################################################
 # Create a stage for building the application.
 FROM deps as build
@@ -35,13 +36,14 @@ FROM deps as build
 # "devDependencies" to be installed to build. If you don't need this, remove this step.
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=bind,source=prisma,target=prisma \
     --mount=type=cache,target=/root/.npm \
-    npm ci
+    npm ci \
+    npm run generate
 
 # Copy the rest of the source files into the image.
 COPY . .
 # Run the build script.
-RUN npm run generate
 RUN npm run build
 
 ################################################################################
@@ -61,11 +63,11 @@ COPY package.json .
 # Copy the production dependencies from the deps stage and also
 # the built application from the build stage into the image.
 COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/./dist ././dist
+COPY --from=build /usr/src/app/dist ./dist
 
 
 # Expose the port that the application listens on.
 EXPOSE 80
 
 # Run the application.
-CMD npm start
+CMD ["node", "dist/src/main", "2>&1"]
