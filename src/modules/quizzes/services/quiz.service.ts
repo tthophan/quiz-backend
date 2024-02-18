@@ -77,10 +77,18 @@ export class QuizService extends BaseService {
         },
       },
     });
+
     if (!quiz) throw new NotFoundException();
+
+    await this.checkQuizAnswered(quiz.id, this.currentSession.userId);
+
     return plainToInstance(QuizResponse, quiz, {
       excludeExtraneousValues: true,
     });
+  }
+
+  async vaniQuizDetail(): Promise<QuizResponse> {
+    return this.detail('vani-quiz');
   }
 
   async submitQuiz(payload: QuizAnswer) {
@@ -141,7 +149,34 @@ export class QuizService extends BaseService {
       ),
     });
   }
+  async checkQuizAnswered(quizId: number, userId: string) {
+    const questionGroup = await this.questionQueries.groupBy({
+      by: ['quizId'],
+      where: {
+        quizId: quizId,
+      },
+      _sum: {
+        maxOptionCanSelected: true,
+      },
+    });
+    const totalOptions = questionGroup.find((x) => x.quizId === quizId)._sum
+      .maxOptionCanSelected;
 
+    const checkQuizResults = await this.resultQueries.groupBy({
+      by: ['result'],
+      _count: true,
+      where: {
+        userId: userId,
+        quizId: quizId,
+      },
+    });
+    if (checkQuizResults.some((x) => x.result == false))
+      throw new BusinessException('QUIZ_ANSWERED');
+    if (
+      checkQuizResults.some((x) => x.result == true && x._count >= totalOptions)
+    )
+      throw new BusinessException('QUIZ_ANSWERED');
+  }
   async answerQuestion(
     payload: AnswerQuestion,
   ): Promise<AnswerQuestionResponse> {
@@ -154,13 +189,23 @@ export class QuizService extends BaseService {
     });
     if (!question) throw new BusinessException('INVALID_DATA');
 
+    await this.checkQuizAnswered(quizId, this.currentSession.userId);
+
+    if (optionIds.length !== question.maxOptionCanSelected)
+      throw new BusinessException('INVALID_DATA');
+
     const options = await this.optionQueries.find({
       where: {
         questionId: question.id,
       },
     });
     const selectedOptions = options.filter((o) => optionIds.includes(o.id));
-    if (selectedOptions.length !== optionIds.length) throw new BusinessException('INVALID_DATA');
+    if (selectedOptions.length !== optionIds.length)
+      throw new BusinessException('INVALID_DATA');
+
+    const isMatch =
+      selectedOptions.filter((x) => x.match).length ===
+      question.maxOptionCanSelected;
 
     await this.resultRepository.createMany({
       data: selectedOptions.map((option) => ({
@@ -168,12 +213,12 @@ export class QuizService extends BaseService {
         questionId: option.questionId,
         optionId: option.id,
         quizId: quizId,
+        result: isMatch,
       })),
     });
 
     return plainToInstance(AnswerQuestionResponse, {
-      result: selectedOptions.filter((x) => x.match).length === question.maxOptionCanSelected,
-      details: options.filter((o) => o.match),
+      result: isMatch,
     });
   }
 }

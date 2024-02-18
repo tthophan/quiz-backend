@@ -14,6 +14,7 @@ datasource db {
 model Quiz {
   id               Int        @id @default(autoincrement()) @map("id")
   code             String     @unique @map("code") @db.VarChar(16)
+  coinBonus        Int        @default(1000) @map("coin_bonus") @db.Int
   title            String     @map("title") @db.VarChar(255)
   shortDescription String     @map("short_description") @db.MediumText
   // Audit filed
@@ -75,6 +76,7 @@ model Result {
   questionId Int      @map("question_id")
   optionId   Int      @map("option_id")
   userId     String   @map("user_id")
+  result     Boolean  @default(false) @map("result") 
   // Audit filed
   isDeleted  Boolean  @default(false) @map("is_deleted") @db.TinyInt
   createdAt  DateTime @default(now()) @map("created_at") @db.DateTime(3)

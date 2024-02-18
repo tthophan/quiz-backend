@@ -31,6 +31,15 @@
 ```bash
 $ yarn install
 ```
+## Migration
+
+```bash
+# migrate database
+$ yarn db:migrate
+
+# seed data
+$ yarn db:seed
+```
 
 ## Running the app
 

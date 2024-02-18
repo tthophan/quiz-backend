@@ -11,7 +11,7 @@ export class QuestionResponse {
   @Expose()
   text: string;
   @Expose()
-  maxOptionCanSelected: Number;
+  maxOptionCanSelected: number;
   @Type(() => OptionResponse)
   @Expose()
   options: Array<OptionResponse>;

@@ -35,4 +35,7 @@ export const ExceptionMessages = {
   AUTH_WRONG_PASSWORD: {
     message: 'Username or password incorrect',
   },
+  QUIZ_ANSWERED: {
+    message: 'previously answered quizzes.',
+  },
 };

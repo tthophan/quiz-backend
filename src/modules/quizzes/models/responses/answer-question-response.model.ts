@@ -1,11 +1,6 @@
-import { Expose, Type } from 'class-transformer';
-import { OptionResponse } from './option-response.model';
+import { Expose } from 'class-transformer';
 
 export class AnswerQuestionResponse {
   @Expose()
   result: boolean;
-
-  @Type(() => OptionResponse)
-  @Expose()
-  details: Array<OptionResponse>;
 }

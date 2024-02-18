@@ -6,4 +6,6 @@ export class ResultQueries extends BaseRepository {
   find = this.client.result.findMany;
   findOne = this.client.result.findFirst;
   findUnique = this.client.result.findUnique;
+  count = this.client.result.count;
+  groupBy = this.client.result.groupBy;
 }

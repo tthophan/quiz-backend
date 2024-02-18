@@ -519,6 +519,157 @@ async function seed() {
         ],
     });
 
+    // 3 //
+    // Create Geography Quiz
+    const vaniQuiz = await prisma.quiz.create({
+        data: {
+            code: 'vani-quiz',
+            title: 'Vani',
+            shortDescription: 'Questions & Answers',
+            createdBy: 'admin',
+        },
+    });
+
+    // Create Question for the Geography Quiz
+    const vaniQuestion1 = await prisma.question.create({
+        data: {
+            code: 'VANI-01-Q1',
+            text: 'How can you accumulate and use membership points with vani?',
+            hint: 'To earn/use membership points with vani benefits, scan the Vani Barcode.',
+            quizId: vaniQuiz.id,
+            maxOptionCanSelected: 1,
+            createdBy: 'admin',
+        },
+    });
+    await prisma.option.createMany({
+        data: [
+            {
+                code: 'VANI-Q1-O1',
+                text: 'Hand over membership card',
+                questionId: vaniQuestion1.id,
+                createdBy: 'admin',
+            },
+            {
+                code: 'VANI-Q1-O2',
+                text: 'Tell your Phone number',
+                questionId: vaniQuestion1.id,
+                createdBy: 'admin',
+            },
+            {
+                code: 'VANI-Q1-O3',
+                text: 'Show Vani Barcode on the Home screen',
+                questionId: vaniQuestion1.id,
+                createdBy: 'admin',
+                match: true, // Correct answer
+            },
+        ],
+    });
+
+    // Create Question for the Geography Quiz
+    const vaniQuestion2 = await prisma.question.create({
+        data: {
+            code: 'VANI-01-Q2',
+            text: 'What is an additional reward when you earn membership points with vani?',
+            hint: 'Earn/use membership points with vani. Open Ice Cream. Get Vani Coins.',
+            quizId: vaniQuiz.id,
+            maxOptionCanSelected: 1,
+            createdBy: 'admin',
+        },
+    });
+    await prisma.option.createMany({
+        data: [
+            {
+                code: 'VANI-Q2-O1',
+                text: 'Vani Point',
+                questionId: vaniQuestion2.id,
+                createdBy: 'admin',
+            },
+            {
+                code: 'VANI-Q2-O2',
+                text: 'Vani Coin',
+                questionId: vaniQuestion2.id,
+                createdBy: 'admin',
+                match: true, // Correct answer
+            },
+            {
+                code: 'VANI-Q2-O3',
+                text: 'Vani Money',
+                questionId: vaniQuestion2.id,
+                createdBy: 'admin',
+            },
+        ],
+    });
+
+    // Create Question for the Geography Quiz
+    const vaniQuestion3 = await prisma.question.create({
+        data: {
+            code: 'VANI-01-Q3',
+            text: 'There is another way to get Vani Coin. What is it?',
+            hint: 'You can get additional Vani Coins when you play Shake once a day',
+            quizId: vaniQuiz.id,
+            maxOptionCanSelected: 1,
+            createdBy: 'admin',
+        },
+    });
+    await prisma.option.createMany({
+        data: [
+            {
+                code: 'VANI-Q3-O1',
+                text: 'Leave a 1:1 inquiry',
+                questionId: vaniQuestion3.id,
+                createdBy: 'admin',
+            },
+            {
+                code: 'VANI-Q3-O2',
+                text: 'Run the vani app every day',
+                questionId: vaniQuestion3.id,
+                createdBy: 'admin',
+                match: true, // Correct answer
+            },
+            {
+                code: 'VANI-Q3-O3',
+                text: 'Play Shake',
+                questionId: vaniQuestion3.id,
+                createdBy: 'admin',
+            },
+        ],
+    });
+
+    // Create Question for the Geography Quiz
+    const vaniQuestion4 = await prisma.question.create({
+        data: {
+            code: 'VANI-01-Q4',
+            text: 'How can you use Vani Coin?',
+            hint: '*Your Vani Coins can be exchanged for other membership points or Vouchers',
+            quizId: vaniQuiz.id,
+            maxOptionCanSelected: 2,
+            createdBy: 'admin',
+        },
+    });
+    await prisma.option.createMany({
+        data: [
+            {
+                code: 'VANI-Q4-O1',
+                text: 'Exchange to Voucher',
+                questionId: vaniQuestion4.id,
+                createdBy: 'admin',
+                match: true, // Correct answer
+            },
+            {
+                code: 'VANI-Q4-O2',
+                text: 'Buy a product at stores',
+                questionId: vaniQuestion4.id,
+                createdBy: 'admin',
+            },
+            {
+                code: 'VANI-Q4-O3',
+                text: 'Exchange to membership points',
+                questionId: vaniQuestion4.id,
+                createdBy: 'admin',
+                match: true, // Correct answer
+            },
+        ],
+    });
 
 
 

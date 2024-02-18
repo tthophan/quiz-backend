@@ -23,6 +23,12 @@ export class QuizzesController extends BaseController {
   }
 
   @Authorize()
+  @Get('vani-quiz/detail')
+  async vaniQuiz() {
+    return this.quizService.vaniQuizDetail();
+  }
+
+  @Authorize()
   @Post()
   async submit(@Body() payload: QuizAnswer) {
     await this.quizService.submitQuiz(payload);
