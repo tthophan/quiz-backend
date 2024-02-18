@@ -40,7 +40,11 @@ $ yarn db:migrate
 # seed data
 $ yarn db:seed
 ```
-
+## Generate Schema
+```bash
+# generate prisma schema
+$ yarn generate
+```
 ## Running the app
 
 ```bash
