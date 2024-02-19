@@ -89,7 +89,10 @@ export class QuizService extends BaseService {
   }
 
   async vaniQuizCheck(): Promise<boolean> {
-    return await this.checkQuizAnswered('vani-quiz', this.currentSession.userId);
+    return await this.checkQuizAnswered(
+      'vani-quiz',
+      this.currentSession.userId,
+    );
   }
 
   async submitQuiz(payload: QuizAnswer) {
@@ -154,12 +157,12 @@ export class QuizService extends BaseService {
   async checkQuizAnswered(quizCode: string, userId: string) {
     const quiz = await this.quizQueries.findUnique({
       where: {
-        code: quizCode
-      }
+        code: quizCode,
+      },
     });
-    if (!quiz) throw new BusinessException('QUIZ_NOT_FOUND')
+    if (!quiz) throw new BusinessException('QUIZ_NOT_FOUND');
 
-    const { id: quizId } = quiz
+    const { id: quizId } = quiz;
     const totalQuestion = await this.questionQueries.count({
       where: {
         quizId: quizId,
@@ -172,7 +175,7 @@ export class QuizService extends BaseService {
         quizId: quizId,
       },
     });
-    return (totalResult === totalQuestion)
+    return totalResult === totalQuestion;
   }
 
   async answerQuestion(
@@ -181,10 +184,10 @@ export class QuizService extends BaseService {
     const { quizId, questionId, optionIds } = payload;
     const quiz = await this.quizQueries.findOne({
       where: {
-        id: quizId
-      }
-    })
-    if (!quiz) throw new BusinessException('QUIZ_NOT_FOUND')
+        id: quizId,
+      },
+    });
+    if (!quiz) throw new BusinessException('QUIZ_NOT_FOUND');
 
     const question = await this.questionQueries.findUnique({
       where: {
@@ -199,11 +202,10 @@ export class QuizService extends BaseService {
         quizId: quiz.id,
         questionId: question.id,
         userId: this.currentSession.userId,
-        result: true
-      }
-    })
-    if (result)
-      throw new BusinessException('QUIZ_ANSWERED');
+        result: true,
+      },
+    });
+    if (result) throw new BusinessException('QUIZ_ANSWERED');
 
     if (optionIds.length !== question.maxOptionCanSelected)
       throw new BusinessException('INVALID_DATA');
@@ -217,10 +219,10 @@ export class QuizService extends BaseService {
     if (selectedOptions.length !== optionIds.length)
       throw new BusinessException('INVALID_DATA');
 
-    const isMatch =
+    const isMatching =
       selectedOptions.filter((x) => x.match).length ===
       question.maxOptionCanSelected;
-    if (isMatch)
+    if (isMatching)
       await this.resultRepository.createMany({
         data: selectedOptions.map((option) => ({
           userId: this.currentSession.userId,
@@ -232,8 +234,8 @@ export class QuizService extends BaseService {
       });
 
     return plainToInstance(AnswerQuestionResponse, {
-      result: isMatch,
-      hint: question.hint
+      result: isMatching,
+      hint: !isMatching ? question.hint : '',
     });
   }
 }
