@@ -79,9 +79,6 @@ export class QuizService extends BaseService {
     });
 
     if (!quiz) throw new NotFoundException();
-
-    await this.checkQuizAnswered(quiz.id, this.currentSession.userId);
-
     return plainToInstance(QuizResponse, quiz, {
       excludeExtraneousValues: true,
     });
@@ -89,6 +86,10 @@ export class QuizService extends BaseService {
 
   async vaniQuizDetail(): Promise<QuizResponse> {
     return this.detail('vani-quiz');
+  }
+
+  async vaniQuizCheck(): Promise<boolean> {
+    return await this.checkQuizAnswered('vani-quiz', this.currentSession.userId);
   }
 
   async submitQuiz(payload: QuizAnswer) {
@@ -149,38 +150,42 @@ export class QuizService extends BaseService {
       ),
     });
   }
-  async checkQuizAnswered(quizId: number, userId: string) {
-    const questionGroup = await this.questionQueries.groupBy({
-      by: ['quizId'],
+
+  async checkQuizAnswered(quizCode: string, userId: string) {
+    const quiz = await this.quizQueries.findUnique({
+      where: {
+        code: quizCode
+      }
+    });
+    if (!quiz) throw new BusinessException('QUIZ_NOT_FOUND')
+
+    const { id: quizId } = quiz
+    const totalQuestion = await this.questionQueries.count({
       where: {
         quizId: quizId,
       },
-      _sum: {
-        maxOptionCanSelected: true,
-      },
     });
-    const totalOptions = questionGroup.find((x) => x.quizId === quizId)._sum
-      .maxOptionCanSelected;
 
-    const checkQuizResults = await this.resultQueries.groupBy({
-      by: ['result'],
-      _count: true,
+    const totalResult = await this.resultQueries.count({
       where: {
         userId: userId,
         quizId: quizId,
       },
     });
-    if (checkQuizResults.some((x) => x.result == false))
-      throw new BusinessException('QUIZ_ANSWERED');
-    if (
-      checkQuizResults.some((x) => x.result == true && x._count >= totalOptions)
-    )
-      throw new BusinessException('QUIZ_ANSWERED');
+    return (totalResult === totalQuestion)
   }
+
   async answerQuestion(
     payload: AnswerQuestion,
   ): Promise<AnswerQuestionResponse> {
     const { quizId, questionId, optionIds } = payload;
+    const quiz = await this.quizQueries.findOne({
+      where: {
+        id: quizId
+      }
+    })
+    if (!quiz) throw new BusinessException('QUIZ_NOT_FOUND')
+
     const question = await this.questionQueries.findUnique({
       where: {
         id: questionId,
@@ -189,7 +194,14 @@ export class QuizService extends BaseService {
     });
     if (!question) throw new BusinessException('INVALID_DATA');
 
-    await this.checkQuizAnswered(quizId, this.currentSession.userId);
+    const result = await this.resultQueries.findOne({
+      where: {
+        quizId: quiz.id,
+        questionId: question.id
+      }
+    })
+    if (result)
+      throw new BusinessException('QUIZ_ANSWERED');
 
     if (optionIds.length !== question.maxOptionCanSelected)
       throw new BusinessException('INVALID_DATA');
@@ -206,19 +218,20 @@ export class QuizService extends BaseService {
     const isMatch =
       selectedOptions.filter((x) => x.match).length ===
       question.maxOptionCanSelected;
-
-    await this.resultRepository.createMany({
-      data: selectedOptions.map((option) => ({
-        userId: this.currentSession.userId,
-        questionId: option.questionId,
-        optionId: option.id,
-        quizId: quizId,
-        result: isMatch,
-      })),
-    });
+    if (isMatch)
+      await this.resultRepository.createMany({
+        data: selectedOptions.map((option) => ({
+          userId: this.currentSession.userId,
+          questionId: option.questionId,
+          optionId: option.id,
+          quizId: quizId,
+          result: true,
+        })),
+      });
 
     return plainToInstance(AnswerQuestionResponse, {
       result: isMatch,
+      hint: question.hint
     });
   }
 }

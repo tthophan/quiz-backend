@@ -36,6 +36,6 @@ export const ExceptionMessages = {
     message: 'Username or password incorrect',
   },
   QUIZ_ANSWERED: {
-    message: 'previously answered quizzes.',
+    message: 'Quiz has been answered by you before.',
   },
 };

@@ -35,6 +35,12 @@ export class QuizzesController extends BaseController {
   }
 
   @Authorize()
+  @Get('answer/check')
+  async checkVaniQuizAnswered() {
+    return await this.quizService.vaniQuizCheck()
+  }
+
+  @Authorize()
   @Post('answer-question')
   async answerQuestion(@Body() payload: AnswerQuestion) {
     return await this.quizService.answerQuestion(payload);

@@ -1,12 +1,3 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker compose reference guide at
-# https://docs.docker.com/compose/compose-file/
-
-# Here the instructions define your application as a service called "server".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
 services:
   server:
     build:
@@ -18,14 +9,15 @@ services:
     ports:
       - 80:80
   db:
-    image: mysql:latest
-    restart: always
+    container_name: postgres_container
+    image: postgres
     environment:
-      MYSQL_DATABASE: quiz
-      MYSQL_ROOT_PASSWORD: rootpw
-    ports:
-      - '${MYSQL_PORT_FORWARD:-3306}:3306'
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=quiz
     volumes:
-      - dbdata:/var/lib/mysql
+      - postgres:/data/postgres
+    ports:
+      - 5432:5432
 volumes:
-  dbdata:
+  postgres:

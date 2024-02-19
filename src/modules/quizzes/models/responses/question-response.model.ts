@@ -6,8 +6,8 @@ export class QuestionResponse {
   id: number;
   @Expose()
   code: string;
-  @Expose()
-  hint: string;
+  // @Expose()
+  // hint: string;
   @Expose()
   text: string;
   @Expose()
