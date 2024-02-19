@@ -197,7 +197,9 @@ export class QuizService extends BaseService {
     const result = await this.resultQueries.findOne({
       where: {
         quizId: quiz.id,
-        questionId: question.id
+        questionId: question.id,
+        userId: this.currentSession.userId,
+        result: true
       }
     })
     if (result)
