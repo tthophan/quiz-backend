@@ -15,7 +15,7 @@ export class AuthorizeGuard implements CanActivate {
     private ref: Reflector,
     private readonly googleOAuthService: GoogleOAuthService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
   async canActivate(context: ExecutionContext) {
     const localAuthData = this.ref.get(
       LOCAL_AUTHORIZE_KEY,
@@ -34,8 +34,8 @@ export class AuthorizeGuard implements CanActivate {
       await this.jwtService.verifyToken<JwtSession>(accessToken);
 
     request.scopeVariable.session = new Session({
-      email: token.email ?? jwtVerify?.data?.userId,
-      userId: token.sub ?? jwtVerify?.data?.email,
+      email: token.email ?? jwtVerify?.data?.email,
+      userId: token.sub ?? jwtVerify?.data?.userId,
     });
     return appStorage.run({ ctxId, request }, () => {
       return token.valid || jwtVerify.valid;

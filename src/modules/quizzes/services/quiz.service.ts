@@ -175,7 +175,7 @@ export class QuizService extends BaseService {
         quizId: quizId,
       },
     });
-    return totalResult === totalQuestion;
+    return totalResult >= totalQuestion;
   }
 
   async answerQuestion(
